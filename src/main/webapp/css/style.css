@@ -1,0 +1,10 @@
+/*
+ * LINK-WORK: MAIN STYLE WRAPPER
+ */
+
+/* 1. GLOBAL SETTINGS & DESIGN TOKENS */
+@import url("global.css");
+
+/* 2. LANDING PAGE STYLES */
+@import url("index.css");
+

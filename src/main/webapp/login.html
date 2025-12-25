@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login - LinkWork</title>
+    <link rel="stylesheet" href="css/global.css?v=1">
+    <link rel="stylesheet" href="css/auth.css?v=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@300;400;700;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="auth-body">
+
+    <div class="auth-nav">
+        <a href="index.html" class="back-link">
+            ← Back to Home
+        </a>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-brand">
+            <div class="brand-mark">L</div>
+            <span class="brand-text" style="color: white;">LinkWork</span>
+        </div>
+
+        <div class="glass-card">
+            <div class="auth-tabs">
+                <a href="#" class="auth-tab active">Sign In</a>
+                <a href="signup.html" class="auth-tab">Register</a>
+            </div>
+
+            <form action="api/login" method="post">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-input" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-input" placeholder="Enter your password"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">I am a...</label>
+                    <div class="role-group">
+                        <label>
+                            <input type="radio" name="role" value="INSTITUTE" class="role-input" checked>
+                            <div class="role-card">
+                                <div class="role-icon">🏢</div>
+                                <div class="role-name">Institution</div>
+                                <div class="role-desc">Hire talent</div>
+                            </div>
+                        </label>
+                        <label>
+                            <input type="radio" name="role" value="JOB_SEEKER" class="role-input">
+                            <div class="role-card">
+                                <div class="role-icon">💼</div>
+                                <div class="role-name">Freelancer</div>
+                                <div class="role-desc">Offer services</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+
+                <div class="auth-footer">
+                    Don't have an account? <a href="signup.html">Register</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/toast.js"></script>
+</body>
+</html>

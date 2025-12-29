@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelancer Dashboard - Link-Work</title>
+    <link rel="stylesheet" href="css/global.css?v=2">
+    <link rel="stylesheet" href="css/dashboard.css?v=2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@300;400;700;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="dash-header">
+        <div class="dash-brand">Freelancer Dashboard</div>
+        <form id="logoutForm" method="post" action="api/logout">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </header>
+
+    <div class="dash-nav-container">
+        <nav class="dash-tabs">
+            <button id="browse-jobs" class="dash-tab active">
+                <span class="tab-icon">🔍</span> Browse Jobs
+            </button>
+            <button id="applied-jobs" class="dash-tab">
+                <span class="tab-icon">✅</span> Applied Jobs
+            </button>
+            <button id="chat" class="dash-tab">
+                <span class="tab-icon">💬</span> Chat <span id="unread-badge" class="badge"></span>
+            </button>
+        </nav>
+    </div>
+
+    <main id="content" class="dash-content">
+        <!-- Content injected by JS -->
+    </main>
+
+    <script>
+        // Init dashboard
+        const content = document.getElementById('content');
+        const browseBtn = document.getElementById('browse-jobs');
+        const appliedBtn = document.getElementById('applied-jobs');
+        const chatBtn = document.getElementById('chat');
+
+        let currentView = 'browse';
+
+        browseBtn.addEventListener('click', () => {
+            currentView = 'browse';
+            updateNav(browseBtn);
+            loadJobs();
+        });
+
+        appliedBtn.addEventListener('click', () => {
+            currentView = 'applied';
+            updateNav(appliedBtn);
+            loadAppliedJobs();
+        });
+
+        chatBtn.addEventListener('click', () => {
+            window.location.href = 'chat.html?role=JOB_SEEKER';
+        });
+
+        function updateNav(activeBtn) {
+            document.querySelectorAll('.dash-tab').forEach(btn => btn.classList.remove('active'));
+            activeBtn.classList.add('active');
+        }
+
+        // Fetch all jobs
+        async function loadJobs() {
+            content.innerHTML = '<div style="text-align: center; color: #64748B;">Loading jobs...</div>';
+            try {
+                const res = await fetch('api/announcements', { cache: 'no-cache' });
+                if (!res.ok) {
+                    content.innerHTML = '<div style="text-align: center; color: red;">Failed to load jobs.</div>';
+                    return;
+                }
+                const jobs = await res.json();
+                content.innerHTML = '';
+                if (jobs.length === 0) {
+                    content.innerHTML = '<div style="text-align: center; color: #64748B; margin-top: 2rem;">No jobs available.</div>';
+                    return;
+                }
+
+                jobs.forEach(job => {
+                    const card = document.createElement('div');
+                    card.className = 'job-card';
+                    card.innerHTML = `
+                        <div class="job-info">
+                            <h3>${job.title}</h3>
+                            <p style="color: #64748B; font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 500;">
+                                ${job.instituteName || 'Unknown Institute'}
+                            </p>
+                            <p class="job-desc">${job.content.substring(0, 150)}${job.content.length > 150 ? '...' : ''}</p>
+                            <div class="job-meta">
+                                ${job.budget || '$ Negotiable'}
+                                <div class="job-posted-time">Posted recently</div>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-navy apply-btn" data-job-id="${job.id}">Apply Now</button>
+                        </div>
+                    `;
+                    content.appendChild(card);
+                });
+
+                document.querySelectorAll('.apply-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const jobId = e.target.dataset.jobId;
+                        try {
+                            const res = await fetch('api/apply', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                body: `jobId=${jobId}`
+                            });
+                            if (res.ok) {
+                                showToast('Applied Successfully', 'success', '');
+                                e.target.textContent = 'Applied';
+                                e.target.disabled = true;
+                                e.target.classList.remove('btn-navy');
+                                e.target.style.background = '#10B981';
+                                e.target.style.cursor = 'default';
+                            } else {
+                                showToast('Failed to apply.', 'error', '');
+                            }
+                        } catch (err) {
+                            showToast('Error applying.', 'error', '');
+                        }
+                    });
+                });
+
+            } catch (e) {
+                content.innerHTML = '<div style="text-align: center; color: red;">Error loading jobs.</div>';
+            }
+        }
+
+        // Fetch my apps
+        async function loadAppliedJobs() {
+            content.innerHTML = '<div style="text-align: center; color: #64748B;">Loading applied jobs...</div>';
+            try {
+                const res = await fetch('api/applied-jobs', { cache: 'no-cache' });
+                if (!res.ok) {
+                    content.innerHTML = '<div style="text-align: center; color: red;">Failed to load applied jobs.</div>';
+                    return;
+                }
+                const jobs = await res.json();
+                content.innerHTML = '';
+                if (jobs.length === 0) {
+                    content.innerHTML = '<div style="text-align: center; color: #64748B; margin-top: 2rem;">No applied jobs yet.</div>';
+                    return;
+                }
+
+                jobs.forEach(job => {
+                    const card = document.createElement('div');
+                    card.className = 'job-card';
+                    card.innerHTML = `
+                        <div class="job-info">
+                            <h3>${job.title}</h3>
+                            <p style="color: #64748B; font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 500;">
+                                ${job.instituteName || 'Unknown Institute'}
+                            </p>
+                            <p class="job-desc">${job.content.substring(0, 100)}${job.content.length > 100 ? '...' : ''}</p>
+                            <div class="job-meta">
+                                Applied
+                                <div class="job-posted-time">Reference ID: #${job.id}</div>
+                            </div>
+                        </div>
+                        <div>
+                            <span style="background: #FEF3C7; color: #D97706; padding: 0.5rem 1rem; border-radius: 50px; font-weight: 600; font-size: 0.9rem;">
+                                Pending
+                            </span>
+                        </div>
+                    `;
+                    content.appendChild(card);
+                });
+            } catch (e) {
+                content.innerHTML = '<div style="text-align: center; color: red;">Error loading applied jobs.</div>';
+            }
+        }
+
+        // Initial load
+        loadJobs();
+        checkUnread();
+        setInterval(checkUnread, 10000);
+
+        // Check for new chats
+        async function checkUnread() {
+            try {
+                const res = await fetch('api/chat/unread');
+                if (res.ok) {
+                    const data = await res.json();
+                    const badge = document.getElementById('unread-badge');
+                    if (data.unreadCount > 0) {
+                        badge.textContent = data.unreadCount;
+                        badge.style.display = 'inline';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                } else {
+                    console.log('Unread API failed:', res.status);
+                }
+            } catch (err) {
+                console.error('Unread check error:', err);
+            }
+        }
+    </script>
+    <script src="js/toast.js"></script>
+</body>
+
+</html>

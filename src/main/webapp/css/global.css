@@ -220,3 +220,18 @@ a {
     color: rgba(255, 255, 255, 0.5);
     font-size: 0.9rem;
 }
+/* Global Responsive */
+@media (max-width: 900px) {
+    .nav-wrapper {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .main-nav {
+        display: none;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Link-Work</title>
+    <link rel="stylesheet" href="css/global.css?v=1">
+    <link rel="stylesheet" href="css/dashboard.css?v=1">
+    <link rel="stylesheet" href="css/chat.css?v=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@300;400;700;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="dash-header">
+        <div class="dash-brand">Chat</div>
+        <div style="display: flex; gap: 1rem; align-items: center; height: 100%;">
+            <!-- Back to Dashboard button -->
+            <button id="backToDash" class="btn btn-navy"
+                style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); height: 42px; display: flex; align-items: center;">
+                &larr; Back to Dashboard
+            </button>
+            <form id="logoutForm" method="post" action="api/logout" style="margin: 0;">
+                <button type="submit" class="logout-btn"
+                    style="height: 42px; display: flex; align-items: center;">Logout</button>
+            </form>
+        </div>
+    </header>
+
+    <div class="dash-nav-container">
+        <!-- Chat layout -->
+        <main class="dash-content">
+            <div class="chat-container">
+                <aside class="conversations-list">
+                    <div class="conversations-header">Conversations</div>
+                    <div id="conversations" class="conversation-items">
+                        <!-- Loaded by JS -->
+                    </div>
+                </aside>
+
+                <section class="chat-panel">
+                    <div class="chat-header" id="chatHeader">
+                        <span style="opacity: 0.6;">Select a conversation to start chatting</span>
+                    </div>
+
+                    <div id="messages" class="messages">
+                        <!-- Messages go here -->
+                    </div>
+
+                    <div class="chat-input-area">
+                        <form id="chatForm" class="chat-form">
+                            <textarea id="messageInput" class="chat-input-field" placeholder="Type your message..."
+                                rows="1" required></textarea>
+                            <button type="submit" class="send-btn">Send</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/chat.js"></script>
+    <script>
+        // Back navigation
+        const backBtn = document.getElementById('backToDash');
+        backBtn.addEventListener('click', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const role = urlParams.get('role');
+            if (role === 'INSTITUTE') {
+                window.location.href = 'institutionDashboard.html';
+            } else if (role === 'JOB_SEEKER') {
+                window.location.href = 'freelancerDashboard.html';
+            } else {
+                // Fallback if role is missing, maybe checking history or default
+                window.history.back();
+            }
+        });
+    </script>
+</body>
+
+</html>

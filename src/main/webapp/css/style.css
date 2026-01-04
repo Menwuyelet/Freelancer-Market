@@ -8,3 +8,11 @@
 /* 2. LANDING PAGE STYLES */
 @import url("index.css");
 
+/* 3. AUTHENTICATION (LOGIN/SIGNUP) */
+@import url("auth.css");
+
+/* 4. DASHBOARD LAYOUTS */
+@import url("dashboard.css");
+
+/* 5. REAL-TIME CHAT INTERFACE */
+@import url("chat.css");

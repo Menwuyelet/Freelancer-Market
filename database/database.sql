@@ -33,3 +33,25 @@ CREATE TABLE IF NOT EXISTS JobApplications (
     FOREIGN KEY (jobseeker_id) REFERENCES Users(id)
 );
 
+
+-- Chat conversation threads between users
+CREATE TABLE IF NOT EXISTS Conversations (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    institute_id INT NOT NULL,
+    freelancer_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (institute_id) REFERENCES Users(id),
+    FOREIGN KEY (freelancer_id) REFERENCES Users(id)
+);
+
+-- Individual chat messages within conversations
+CREATE TABLE IF NOT EXISTS Messages (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    conversation_id INT NOT NULL,
+    sender_id INT NOT NULL,
+    body TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (conversation_id) REFERENCES Conversations(id),
+    FOREIGN KEY (sender_id) REFERENCES Users(id)
+);

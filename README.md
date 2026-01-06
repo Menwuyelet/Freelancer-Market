@@ -145,13 +145,3 @@ mvn clean package
 ```
 
 Access the application at: `http://localhost:8080/link-work/`
-
-## 👥 Members List
-**Group Name:**
-
-1. Student 1 - ID: [ID]
-2. Student 2 - ID: [ID]
-3. Student 3 - ID: [ID]
-4. Student 4 - ID: [ID]
-5. Student 5 - ID: [ID]
-6. Student 6 - ID: [ID]
